@@ -34,3 +34,4 @@ build/
 
 .env
 .cursorrules
+docker-compose.yml
