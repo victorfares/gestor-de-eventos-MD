@@ -7,6 +7,8 @@ import br.edu.utfpr.gestoreventosmd.model.Evento;
 import br.edu.utfpr.gestoreventosmd.model.Inscricao;
 import br.edu.utfpr.gestoreventosmd.repository.InscricaoRepository;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +43,14 @@ public class InscricaoService {
                 .build();
 
         return paraResponse(inscricaoRepository.save(inscricao));
+    }
+
+    @Transactional(readOnly = true)
+    public List<InscricaoResponseDTO> recuperarInscritosPorEvento(UUID eventoId) {
+        Evento evento = eventoService.buscarEntidadePorId(eventoId);
+        return inscricaoRepository.findByEventoIdOrderByDataInscricaoAsc(evento.getId()).stream()
+                .map(this::paraResponse)
+                .toList();
     }
 
     private InscricaoResponseDTO paraResponse(Inscricao inscricao) {

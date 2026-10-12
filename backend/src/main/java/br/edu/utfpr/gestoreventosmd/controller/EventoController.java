@@ -2,7 +2,9 @@ package br.edu.utfpr.gestoreventosmd.controller;
 
 import br.edu.utfpr.gestoreventosmd.dto.EventoRequestDTO;
 import br.edu.utfpr.gestoreventosmd.dto.EventoResponseDTO;
+import br.edu.utfpr.gestoreventosmd.dto.InscricaoResponseDTO;
 import br.edu.utfpr.gestoreventosmd.service.EventoService;
+import br.edu.utfpr.gestoreventosmd.service.InscricaoService;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class EventoController {
 
     private final EventoService eventoService;
+    private final InscricaoService inscricaoService;
 
     @GetMapping
     public ResponseEntity<List<EventoResponseDTO>> listarTodos() {
@@ -33,6 +36,11 @@ public class EventoController {
     @GetMapping("/{id}")
     public ResponseEntity<EventoResponseDTO> buscarPorId(@PathVariable UUID id) {
         return ResponseEntity.ok(eventoService.buscarPorId(id));
+    }
+
+    @GetMapping("/{id}/inscricoes")
+    public ResponseEntity<List<InscricaoResponseDTO>> listarInscritas(@PathVariable UUID id) {
+        return ResponseEntity.ok(inscricaoService.recuperarInscritosPorEvento(id));
     }
 
     @PostMapping

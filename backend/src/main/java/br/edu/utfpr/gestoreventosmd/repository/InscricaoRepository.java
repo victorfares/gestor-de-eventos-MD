@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface InscricaoRepository extends JpaRepository<Inscricao, UUID> {
 
-    List<Inscricao> findByEventoId(UUID eventoId);
+    List<Inscricao> findByEventoIdOrderByDataInscricaoAsc(UUID eventoId);
 
     boolean existsByEventoIdAndEmailIgnoreCase(UUID eventoId, String email);
 
