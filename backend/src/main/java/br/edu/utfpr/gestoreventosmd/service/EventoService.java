@@ -70,6 +70,12 @@ public class EventoService {
                         "Evento não encontrado para o ID: " + id));
     }
 
+    public Evento buscarEntidadePorIdComBloqueio(Long id) {
+        return eventoRepository.buscarPorIdComBloqueio(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Evento não encontrado para o ID: " + id));
+    }
+
     private Usuario buscarUsuarioPorId(Long id) {
         return usuarioRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(

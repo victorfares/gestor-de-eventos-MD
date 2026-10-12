@@ -20,10 +20,16 @@ public class InscricaoService {
 
     @Transactional
     public InscricaoResponseDTO registrar(InscricaoRequestDTO dto) {
-        Evento evento = eventoService.buscarEntidadePorId(dto.getEventoId());
+        // O bloqueio serializa inscrições concorrentes no mesmo evento, evitando
+        // que a contagem de vagas e a checagem de duplicidade fiquem desatualizadas.
+        Evento evento = eventoService.buscarEntidadePorIdComBloqueio(dto.getEventoId());
 
         if (inscricaoRepository.existsByEventoIdAndEmailIgnoreCase(evento.getId(), dto.getEmail())) {
             throw new BusinessException("Este e-mail já está inscrito neste evento.");
+        }
+
+        if (inscricaoRepository.countByEventoId(evento.getId()) >= evento.getLimiteVagas()) {
+            throw new BusinessException("Não há vagas disponíveis para este evento.");
         }
 
         Inscricao inscricao = Inscricao.builder()
