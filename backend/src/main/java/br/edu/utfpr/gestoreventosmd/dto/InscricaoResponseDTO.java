@@ -1,6 +1,7 @@
 package br.edu.utfpr.gestoreventosmd.dto;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,10 +13,10 @@ import lombok.NoArgsConstructor;
 @Builder
 public class InscricaoResponseDTO {
 
-    private Long id;
+    private UUID id;
     private String nome;
     private String email;
     private String idadeOuSerie;
     private LocalDateTime dataInscricao;
-    private Long eventoId;
+    private UUID eventoId;
 }

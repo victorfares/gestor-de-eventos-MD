@@ -6,6 +6,7 @@ import br.edu.utfpr.gestoreventosmd.service.EventoService;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,7 +31,7 @@ public class EventoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EventoResponseDTO> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<EventoResponseDTO> buscarPorId(@PathVariable UUID id) {
         return ResponseEntity.ok(eventoService.buscarPorId(id));
     }
 
@@ -43,13 +44,13 @@ public class EventoController {
 
     @PutMapping("/{id}")
     public ResponseEntity<EventoResponseDTO> atualizar(
-            @PathVariable Long id,
+            @PathVariable UUID id,
             @Valid @RequestBody EventoRequestDTO dto) {
         return ResponseEntity.ok(eventoService.atualizar(id, dto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> excluir(@PathVariable Long id) {
+    public ResponseEntity<Void> excluir(@PathVariable UUID id) {
         eventoService.excluir(id);
         return ResponseEntity.noContent().build();
     }

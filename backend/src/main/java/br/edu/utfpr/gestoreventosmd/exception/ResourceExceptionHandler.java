@@ -36,7 +36,7 @@ public class ResourceExceptionHandler {
                 HttpStatus.BAD_REQUEST,
                 "Requisição malformada",
                 "Corpo da requisição inválido. Verifique o JSON e os formatos dos campos "
-                        + "(datas no padrão yyyy-MM-ddTHH:mm:ss).",
+                        + "(datas no padrão yyyy-MM-ddTHH:mm:ss e ids no formato UUID).",
                 request);
     }
 

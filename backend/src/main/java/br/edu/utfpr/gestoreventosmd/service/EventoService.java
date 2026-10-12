@@ -10,6 +10,7 @@ import br.edu.utfpr.gestoreventosmd.repository.EventoRepository;
 import br.edu.utfpr.gestoreventosmd.repository.InscricaoRepository;
 import br.edu.utfpr.gestoreventosmd.repository.UsuarioRepository;
 import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +31,7 @@ public class EventoService {
     }
 
     @Transactional(readOnly = true)
-    public EventoResponseDTO buscarPorId(Long id) {
+    public EventoResponseDTO buscarPorId(UUID id) {
         return paraResponse(buscarEntidadePorId(id));
     }
 
@@ -49,7 +50,7 @@ public class EventoService {
     }
 
     @Transactional
-    public EventoResponseDTO atualizar(Long id, EventoRequestDTO dto) {
+    public EventoResponseDTO atualizar(UUID id, EventoRequestDTO dto) {
         Evento evento = buscarEntidadePorIdComBloqueio(id);
 
         long inscritas = inscricaoRepository.countByEventoId(id);
@@ -69,24 +70,24 @@ public class EventoService {
     }
 
     @Transactional
-    public void excluir(Long id) {
+    public void excluir(UUID id) {
         Evento evento = buscarEntidadePorId(id);
         eventoRepository.delete(evento);
     }
 
-    public Evento buscarEntidadePorId(Long id) {
+    public Evento buscarEntidadePorId(UUID id) {
         return eventoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Evento não encontrado para o ID: " + id));
     }
 
-    public Evento buscarEntidadePorIdComBloqueio(Long id) {
+    public Evento buscarEntidadePorIdComBloqueio(UUID id) {
         return eventoRepository.buscarPorIdComBloqueio(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Evento não encontrado para o ID: " + id));
     }
 
-    private Usuario buscarUsuarioPorId(Long id) {
+    private Usuario buscarUsuarioPorId(UUID id) {
         return usuarioRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Usuário não encontrado para o ID: " + id));
