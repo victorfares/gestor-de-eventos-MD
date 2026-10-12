@@ -47,7 +47,7 @@ public class InscricaoService {
         }
 
         Inscricao inscricao = Inscricao.builder()
-                .nome(dto.getNome())
+                .nome(dto.getNome().trim().replaceAll("\\s+", " "))
                 .email(dto.getEmail())
                 .idadeOuSerie(dto.getIdadeOuSerie())
                 .dataInscricao(agora)
