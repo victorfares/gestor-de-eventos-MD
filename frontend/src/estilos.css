@@ -1,0 +1,17 @@
+html,
+body,
+#app {
+  min-height: 100%;
+}
+
+.cabecalho-marca.v-toolbar {
+  background: linear-gradient(90deg, #5b2c91 0%, #c4458c 55%, #e8892d 100%) !important;
+}
+
+.logo-cabecalho {
+  height: 44px;
+  width: 44px;
+  border-radius: 10px;
+  object-fit: cover;
+  background: white;
+}
