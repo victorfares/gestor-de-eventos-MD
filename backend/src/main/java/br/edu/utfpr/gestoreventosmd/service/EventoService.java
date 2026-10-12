@@ -2,10 +2,12 @@ package br.edu.utfpr.gestoreventosmd.service;
 
 import br.edu.utfpr.gestoreventosmd.dto.EventoRequestDTO;
 import br.edu.utfpr.gestoreventosmd.dto.EventoResponseDTO;
+import br.edu.utfpr.gestoreventosmd.exception.BusinessException;
 import br.edu.utfpr.gestoreventosmd.exception.ResourceNotFoundException;
 import br.edu.utfpr.gestoreventosmd.model.Evento;
 import br.edu.utfpr.gestoreventosmd.model.Usuario;
 import br.edu.utfpr.gestoreventosmd.repository.EventoRepository;
+import br.edu.utfpr.gestoreventosmd.repository.InscricaoRepository;
 import br.edu.utfpr.gestoreventosmd.repository.UsuarioRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,7 @@ public class EventoService {
 
     private final EventoRepository eventoRepository;
     private final UsuarioRepository usuarioRepository;
+    private final InscricaoRepository inscricaoRepository;
 
     @Transactional(readOnly = true)
     public List<EventoResponseDTO> listarTodos() {
@@ -47,7 +50,14 @@ public class EventoService {
 
     @Transactional
     public EventoResponseDTO atualizar(Long id, EventoRequestDTO dto) {
-        Evento evento = buscarEntidadePorId(id);
+        Evento evento = buscarEntidadePorIdComBloqueio(id);
+
+        long inscritas = inscricaoRepository.countByEventoId(id);
+        if (dto.getLimiteVagas() < inscritas) {
+            throw new BusinessException("O limite de vagas não pode ser menor que o número de inscritas ("
+                    + inscritas + ").");
+        }
+
         evento.setTitulo(dto.getTitulo());
         evento.setDescricao(dto.getDescricao());
         evento.setData(dto.getData());
