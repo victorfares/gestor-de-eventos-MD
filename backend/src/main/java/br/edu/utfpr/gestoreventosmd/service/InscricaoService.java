@@ -32,6 +32,11 @@ public class InscricaoService {
         // O bloqueio serializa inscrições concorrentes no mesmo evento, evitando
         // que a contagem de vagas e a checagem de duplicidade fiquem desatualizadas.
         Evento evento = eventoService.buscarEntidadePorIdComBloqueio(dto.getEventoId());
+        LocalDateTime agora = LocalDateTime.now();
+
+        if (evento.getData().isBefore(agora)) {
+            throw new BusinessException("As inscrições para este evento estão encerradas, pois ele já aconteceu.");
+        }
 
         if (inscricaoRepository.existsByEventoIdAndEmailIgnoreCase(evento.getId(), dto.getEmail())) {
             throw new BusinessException("Este e-mail já está inscrito neste evento.");
@@ -45,7 +50,7 @@ public class InscricaoService {
                 .nome(dto.getNome())
                 .email(dto.getEmail())
                 .idadeOuSerie(dto.getIdadeOuSerie())
-                .dataInscricao(LocalDateTime.now())
+                .dataInscricao(agora)
                 .evento(evento)
                 .build();
 
