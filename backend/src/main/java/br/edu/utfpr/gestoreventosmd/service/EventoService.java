@@ -47,14 +47,14 @@ public class EventoService {
     }
 
     @Transactional
-    public EventoResponseDTO criar(EventoRequestDTO dto) {
+    public EventoResponseDTO criar(EventoRequestDTO dto, UUID criadorId) {
         Evento evento = Evento.builder()
                 .titulo(dto.getTitulo())
                 .descricao(dto.getDescricao())
                 .data(dto.getData())
                 .local(dto.getLocal())
                 .limiteVagas(dto.getLimiteVagas())
-                .criador(buscarUsuarioPorId(dto.getUsuarioId()))
+                .criador(buscarUsuarioPorId(criadorId))
                 .build();
 
         return paraResponse(eventoRepository.save(evento));
@@ -75,7 +75,6 @@ public class EventoService {
         evento.setData(dto.getData());
         evento.setLocal(dto.getLocal());
         evento.setLimiteVagas(dto.getLimiteVagas());
-        evento.setCriador(buscarUsuarioPorId(dto.getUsuarioId()));
 
         return paraResponse(eventoRepository.save(evento));
     }

@@ -17,6 +17,8 @@ import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -64,8 +66,10 @@ public class EventoController {
     }
 
     @PostMapping
-    public ResponseEntity<EventoResponseDTO> criar(@Valid @RequestBody EventoRequestDTO dto) {
-        EventoResponseDTO criado = eventoService.criar(dto);
+    public ResponseEntity<EventoResponseDTO> criar(
+            @Valid @RequestBody EventoRequestDTO dto,
+            @AuthenticationPrincipal Jwt usuarioLogado) {
+        EventoResponseDTO criado = eventoService.criar(dto, UUID.fromString(usuarioLogado.getSubject()));
         URI localizacao = URI.create("/api/eventos/" + criado.getId());
         return ResponseEntity.created(localizacao).body(criado);
     }
