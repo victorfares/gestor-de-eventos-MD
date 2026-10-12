@@ -4,6 +4,7 @@ import br.edu.utfpr.gestoreventosmd.dto.ArquivoExportadoDTO;
 import br.edu.utfpr.gestoreventosmd.dto.EventoRequestDTO;
 import br.edu.utfpr.gestoreventosmd.dto.EventoResponseDTO;
 import br.edu.utfpr.gestoreventosmd.dto.InscricaoResponseDTO;
+import br.edu.utfpr.gestoreventosmd.dto.PeriodoEvento;
 import br.edu.utfpr.gestoreventosmd.service.EventoService;
 import br.edu.utfpr.gestoreventosmd.service.InscricaoService;
 import jakarta.validation.Valid;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -34,8 +36,9 @@ public class EventoController {
     private final InscricaoService inscricaoService;
 
     @GetMapping
-    public ResponseEntity<List<EventoResponseDTO>> listarTodos() {
-        return ResponseEntity.ok(eventoService.listarTodos());
+    public ResponseEntity<List<EventoResponseDTO>> listar(
+            @RequestParam(required = false) PeriodoEvento periodo) {
+        return ResponseEntity.ok(eventoService.listar(periodo));
     }
 
     @GetMapping("/{id}")

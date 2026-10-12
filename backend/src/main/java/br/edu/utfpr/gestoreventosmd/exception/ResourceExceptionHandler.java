@@ -2,6 +2,9 @@ package br.edu.utfpr.gestoreventosmd.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.Instant;
+import java.util.Arrays;
+import java.util.Locale;
+import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -44,11 +47,14 @@ public class ResourceExceptionHandler {
     public ResponseEntity<StandardError> argumentTypeMismatch(
             MethodArgumentTypeMismatchException e,
             HttpServletRequest request) {
-        return montarErro(
-                HttpStatus.BAD_REQUEST,
-                "Parâmetro inválido",
-                "Valor inválido para o parâmetro '" + e.getName() + "': " + e.getValue(),
-                request);
+        String message = "Valor inválido para o parâmetro '" + e.getName() + "': " + e.getValue();
+        Class<?> tipo = e.getRequiredType();
+        if (tipo != null && tipo.isEnum()) {
+            message += ". Valores aceitos: " + Arrays.stream(tipo.getEnumConstants())
+                    .map(valor -> valor.toString().toLowerCase(Locale.ROOT))
+                    .collect(Collectors.joining(", "));
+        }
+        return montarErro(HttpStatus.BAD_REQUEST, "Parâmetro inválido", message, request);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

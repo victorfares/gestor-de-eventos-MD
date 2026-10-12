@@ -2,6 +2,7 @@ package br.edu.utfpr.gestoreventosmd.service;
 
 import br.edu.utfpr.gestoreventosmd.dto.EventoRequestDTO;
 import br.edu.utfpr.gestoreventosmd.dto.EventoResponseDTO;
+import br.edu.utfpr.gestoreventosmd.dto.PeriodoEvento;
 import br.edu.utfpr.gestoreventosmd.exception.BusinessException;
 import br.edu.utfpr.gestoreventosmd.exception.ResourceNotFoundException;
 import br.edu.utfpr.gestoreventosmd.model.Evento;
@@ -9,6 +10,7 @@ import br.edu.utfpr.gestoreventosmd.model.Usuario;
 import br.edu.utfpr.gestoreventosmd.repository.EventoRepository;
 import br.edu.utfpr.gestoreventosmd.repository.InscricaoRepository;
 import br.edu.utfpr.gestoreventosmd.repository.UsuarioRepository;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +26,17 @@ public class EventoService {
     private final InscricaoRepository inscricaoRepository;
 
     @Transactional(readOnly = true)
-    public List<EventoResponseDTO> listarTodos() {
-        return eventoRepository.findAll().stream()
+    public List<EventoResponseDTO> listar(PeriodoEvento periodo) {
+        LocalDateTime agora = LocalDateTime.now();
+        List<Evento> eventos;
+        if (periodo == PeriodoEvento.FUTUROS) {
+            eventos = eventoRepository.findByDataGreaterThanEqualOrderByDataAsc(agora);
+        } else if (periodo == PeriodoEvento.PASSADOS) {
+            eventos = eventoRepository.findByDataLessThanOrderByDataDesc(agora);
+        } else {
+            eventos = eventoRepository.findAllByOrderByDataAsc();
+        }
+        return eventos.stream()
                 .map(this::paraResponse)
                 .toList();
     }
