@@ -18,5 +18,6 @@ public class EventoResponseDTO {
     private LocalDateTime data;
     private String local;
     private Integer limiteVagas;
+    private Long vagasDisponiveis;
     private Long usuarioId;
 }

@@ -100,6 +100,8 @@ public class EventoService {
                 .data(evento.getData())
                 .local(evento.getLocal())
                 .limiteVagas(evento.getLimiteVagas())
+                .vagasDisponiveis(Math.max(0, evento.getLimiteVagas()
+                        - inscricaoRepository.countByEventoId(evento.getId())))
                 .usuarioId(evento.getCriador() != null ? evento.getCriador().getId() : null)
                 .build();
     }
