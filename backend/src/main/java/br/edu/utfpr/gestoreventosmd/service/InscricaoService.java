@@ -2,6 +2,7 @@ package br.edu.utfpr.gestoreventosmd.service;
 
 import br.edu.utfpr.gestoreventosmd.dto.InscricaoRequestDTO;
 import br.edu.utfpr.gestoreventosmd.dto.InscricaoResponseDTO;
+import br.edu.utfpr.gestoreventosmd.exception.BusinessException;
 import br.edu.utfpr.gestoreventosmd.model.Evento;
 import br.edu.utfpr.gestoreventosmd.model.Inscricao;
 import br.edu.utfpr.gestoreventosmd.repository.InscricaoRepository;
@@ -20,6 +21,10 @@ public class InscricaoService {
     @Transactional
     public InscricaoResponseDTO registrar(InscricaoRequestDTO dto) {
         Evento evento = eventoService.buscarEntidadePorId(dto.getEventoId());
+
+        if (inscricaoRepository.existsByEventoIdAndEmailIgnoreCase(evento.getId(), dto.getEmail())) {
+            throw new BusinessException("Este e-mail já está inscrito neste evento.");
+        }
 
         Inscricao inscricao = Inscricao.builder()
                 .nome(dto.getNome())

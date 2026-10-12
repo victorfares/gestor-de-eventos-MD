@@ -4,10 +4,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.time.Instant;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @RestControllerAdvice
 public class ResourceExceptionHandler {
@@ -16,15 +18,37 @@ public class ResourceExceptionHandler {
     public ResponseEntity<StandardError> resourceNotFound(
             ResourceNotFoundException e,
             HttpServletRequest request) {
-        HttpStatus status = HttpStatus.NOT_FOUND;
-        StandardError err = StandardError.builder()
-                .timestamp(Instant.now())
-                .status(status.value())
-                .error("Recurso não encontrado")
-                .message(e.getMessage())
-                .path(request.getRequestURI())
-                .build();
-        return ResponseEntity.status(status).body(err);
+        return montarErro(HttpStatus.NOT_FOUND, "Recurso não encontrado", e.getMessage(), request);
+    }
+
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<StandardError> business(
+            BusinessException e,
+            HttpServletRequest request) {
+        return montarErro(HttpStatus.CONFLICT, "Regra de negócio violada", e.getMessage(), request);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<StandardError> messageNotReadable(
+            HttpMessageNotReadableException e,
+            HttpServletRequest request) {
+        return montarErro(
+                HttpStatus.BAD_REQUEST,
+                "Requisição malformada",
+                "Corpo da requisição inválido. Verifique o JSON e os formatos dos campos "
+                        + "(datas no padrão yyyy-MM-ddTHH:mm:ss).",
+                request);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<StandardError> argumentTypeMismatch(
+            MethodArgumentTypeMismatchException e,
+            HttpServletRequest request) {
+        return montarErro(
+                HttpStatus.BAD_REQUEST,
+                "Parâmetro inválido",
+                "Valor inválido para o parâmetro '" + e.getName() + "': " + e.getValue(),
+                request);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -43,6 +67,21 @@ public class ResourceExceptionHandler {
             err.adicionarErro(fieldError.getField(), fieldError.getDefaultMessage());
         }
 
+        return ResponseEntity.status(status).body(err);
+    }
+
+    private ResponseEntity<StandardError> montarErro(
+            HttpStatus status,
+            String error,
+            String message,
+            HttpServletRequest request) {
+        StandardError err = StandardError.builder()
+                .timestamp(Instant.now())
+                .status(status.value())
+                .error(error)
+                .message(message)
+                .path(request.getRequestURI())
+                .build();
         return ResponseEntity.status(status).body(err);
     }
 }
