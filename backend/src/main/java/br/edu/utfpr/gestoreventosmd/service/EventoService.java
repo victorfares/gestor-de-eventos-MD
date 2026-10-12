@@ -2,9 +2,11 @@ package br.edu.utfpr.gestoreventosmd.service;
 
 import br.edu.utfpr.gestoreventosmd.dto.EventoRequestDTO;
 import br.edu.utfpr.gestoreventosmd.dto.EventoResponseDTO;
-import br.edu.utfpr.gestoreventosmd.exception.RecursoNaoEncontradoException;
+import br.edu.utfpr.gestoreventosmd.exception.ResourceNotFoundException;
 import br.edu.utfpr.gestoreventosmd.model.Evento;
+import br.edu.utfpr.gestoreventosmd.model.Usuario;
 import br.edu.utfpr.gestoreventosmd.repository.EventoRepository;
+import br.edu.utfpr.gestoreventosmd.repository.UsuarioRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class EventoService {
 
     private final EventoRepository eventoRepository;
+    private final UsuarioRepository usuarioRepository;
 
     @Transactional(readOnly = true)
     public List<EventoResponseDTO> listarTodos() {
@@ -36,6 +39,7 @@ public class EventoService {
                 .data(dto.getData())
                 .local(dto.getLocal())
                 .limiteVagas(dto.getLimiteVagas())
+                .criador(buscarUsuarioPorId(dto.getUsuarioId()))
                 .build();
 
         return paraResponse(eventoRepository.save(evento));
@@ -49,6 +53,7 @@ public class EventoService {
         evento.setData(dto.getData());
         evento.setLocal(dto.getLocal());
         evento.setLimiteVagas(dto.getLimiteVagas());
+        evento.setCriador(buscarUsuarioPorId(dto.getUsuarioId()));
 
         return paraResponse(eventoRepository.save(evento));
     }
@@ -61,8 +66,14 @@ public class EventoService {
 
     public Evento buscarEntidadePorId(Long id) {
         return eventoRepository.findById(id)
-                .orElseThrow(() -> new RecursoNaoEncontradoException(
+                .orElseThrow(() -> new ResourceNotFoundException(
                         "Evento não encontrado para o ID: " + id));
+    }
+
+    private Usuario buscarUsuarioPorId(Long id) {
+        return usuarioRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Usuário não encontrado para o ID: " + id));
     }
 
     private EventoResponseDTO paraResponse(Evento evento) {
@@ -73,6 +84,7 @@ public class EventoService {
                 .data(evento.getData())
                 .local(evento.getLocal())
                 .limiteVagas(evento.getLimiteVagas())
+                .usuarioId(evento.getCriador() != null ? evento.getCriador().getId() : null)
                 .build();
     }
 }

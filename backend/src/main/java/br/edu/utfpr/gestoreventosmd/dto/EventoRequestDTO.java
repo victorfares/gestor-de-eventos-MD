@@ -33,4 +33,7 @@ public class EventoRequestDTO {
     @NotNull
     @Min(1)
     private Integer limiteVagas;
+
+    @NotNull
+    private Long usuarioId;
 }
