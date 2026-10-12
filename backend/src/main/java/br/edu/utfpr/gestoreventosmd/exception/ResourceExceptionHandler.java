@@ -8,6 +8,9 @@ import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -29,6 +32,35 @@ public class ResourceExceptionHandler {
             BusinessException e,
             HttpServletRequest request) {
         return montarErro(HttpStatus.CONFLICT, "Regra de negócio violada", e.getMessage(), request);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<StandardError> badCredentials(
+            BadCredentialsException e,
+            HttpServletRequest request) {
+        return montarErro(HttpStatus.UNAUTHORIZED, "Não autorizado", "E-mail ou senha inválidos.", request);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<StandardError> authentication(
+            AuthenticationException e,
+            HttpServletRequest request) {
+        return montarErro(
+                HttpStatus.UNAUTHORIZED,
+                "Não autorizado",
+                "Faça login para acessar este recurso. Se já fez, seu acesso pode ter expirado.",
+                request);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<StandardError> accessDenied(
+            AccessDeniedException e,
+            HttpServletRequest request) {
+        return montarErro(
+                HttpStatus.FORBIDDEN,
+                "Acesso negado",
+                "Você não tem permissão para acessar este recurso.",
+                request);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
