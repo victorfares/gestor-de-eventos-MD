@@ -2,6 +2,7 @@ package br.edu.utfpr.gestoreventosmd.config;
 
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -11,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -24,6 +26,9 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
 @Configuration
@@ -32,17 +37,21 @@ public class SecurityConfig {
 
     private final SecretKey chaveJwt;
     private final HandlerExceptionResolver handlerExceptionResolver;
+    private final List<String> origensPermitidas;
 
     public SecurityConfig(
             @Value("${app.jwt.secret}") String segredoJwt,
+            @Value("${app.cors.origens}") List<String> origensPermitidas,
             @Qualifier("handlerExceptionResolver") HandlerExceptionResolver handlerExceptionResolver) {
         this.chaveJwt = new SecretKeySpec(segredoJwt.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
+        this.origensPermitidas = origensPermitidas;
         this.handlerExceptionResolver = handlerExceptionResolver;
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
@@ -59,6 +68,19 @@ public class SecurityConfig {
                                 handlerExceptionResolver.resolveException(request, response, null, ex)));
 
         return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuracao = new CorsConfiguration();
+        configuracao.setAllowedOrigins(origensPermitidas);
+        configuracao.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuracao.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        configuracao.setExposedHeaders(List.of("Content-Disposition", "Location"));
+
+        UrlBasedCorsConfigurationSource origem = new UrlBasedCorsConfigurationSource();
+        origem.registerCorsConfiguration("/api/**", configuracao);
+        return origem;
     }
 
     @Bean
