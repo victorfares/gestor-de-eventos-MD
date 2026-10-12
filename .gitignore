@@ -1,10 +1,25 @@
+# Sistema operacional
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Segredos e configuração local
+.env
+.env.*
+!.env.example
+*.local
+
+# Java / Maven / Spring
 HELP.md
 target/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+*.class
+*.log
+hs_err_pid*
 
-### STS ###
+# IDEs
 .apt_generated
 .classpath
 .factorypath
@@ -12,26 +27,27 @@ target/
 .settings
 .springBeans
 .sts4-cache
-
-### IntelliJ IDEA ###
 .idea
 *.iws
 *.iml
 *.ipr
-
-### NetBeans ###
 /nbproject/private/
 /nbbuild/
-/dist/
 /nbdist/
 /.nb-gradle/
+.vscode/
+
+# Build compartilhado (Java e Vue)
 build/
+dist/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
-### VS Code ###
-.vscode/
+# Vue / Vite / Node
+node_modules/
+.vite/
+coverage/
 
-.env
+# Arquivos locais do projeto
 .cursorrules
 docker-compose.yml
