@@ -127,7 +127,12 @@ Os arquivos ficam em `frontend/dist`.
 
 ### Equipe
 
-Gestor de Eventos MD, projeto de extensão Meninas Digitais da UTFPR Campus Cornélio Procópio.
+Grupo 8
+Alunos :
+GABRIEL HENRIQUE SCARDUELLI
+GABRIEL SASAKI RONCAGLIA
+GUSTAVO SEIJI TANAKA
+VICTOR FARES CORREA AUAD PEREIRA
 
 ### Objetivo do sistema
 
