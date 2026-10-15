@@ -80,7 +80,7 @@ Para parar o banco: `docker stop gestor_eventos_db`. Para iniciar de novo: `dock
 1. Salve o código com Git, ou obtenha uma cópia:
 
 ```powershell
-git clone <endereco-do-repositorio>
+git clone <(https://github.com/victorfares/gestor-de-eventos-MD)>
 cd "gestor de eventos MD"
 ```
 
