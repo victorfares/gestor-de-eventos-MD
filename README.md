@@ -8,6 +8,10 @@ Este roteiro permite salvar o código, criar a base de dados, compilar, executar
 
 ### Ferramentas para codificar, compilar e executar
 
+Acesse o site onde esta hosteado o projeto : https://gestor-de-eventos-md.vercel.app
+
+OU
+
 | Ferramenta | Versão | Uso | Link |
 |---|---|---|---|
 | Java JDK | 17 (testado com 17.0.12) | Compilar e executar a API | https://adoptium.net/temurin/releases/?version=17 |
@@ -17,7 +21,6 @@ Este roteiro permite salvar o código, criar a base de dados, compilar, executar
 | Git | atual | Salvar e obter o código | https://git-scm.com/ |
 | Docker Desktop | atual, com Docker Compose | Subir o PostgreSQL local | https://www.docker.com/products/docker-desktop/ |
 
-Editor usado no desenvolvimento: Cursor (https://cursor.com/). O projeto também abre no IntelliJ IDEA ou no Visual Studio Code. O editor não é obrigatório para compilar e executar pelos comandos abaixo.
 
 ### Ferramentas da base de dados
 
