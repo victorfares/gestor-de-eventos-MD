@@ -58,6 +58,7 @@ public class SecurityConfig {
                         .requestMatchers("/error").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/eventos", "/api/eventos/*").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/eventos/*/fotos", "/api/eventos/*/fotos/*").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/inscricoes").permitAll()
                         .anyRequest().hasRole("ADMIN"))
                 .oauth2ResourceServer(oauth2 -> oauth2

@@ -1,3 +1,21 @@
+export function partesData(valor) {
+  const data = new Date(valor)
+  const semana = data.toLocaleDateString('pt-BR', { weekday: 'short' }).replace('.', '')
+  const mes = data.toLocaleDateString('pt-BR', { month: 'short' }).replace('.', '')
+  return {
+    semana: semana.slice(0, 3).toUpperCase(),
+    dia: String(data.getDate()),
+    mes: mes.charAt(0).toUpperCase() + mes.slice(1),
+    hora: data.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
+    dataLonga: data.toLocaleDateString('pt-BR', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    }),
+  }
+}
+
 export function formatarDataHora(valor) {
   if (!valor) {
     return '—'

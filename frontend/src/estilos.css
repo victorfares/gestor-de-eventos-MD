@@ -1,11 +1,61 @@
+:root {
+  --fonte-marca: "Baloo 2", sans-serif;
+  --fonte-titulo: "Sora", sans-serif;
+  --fonte-texto: "Nunito", sans-serif;
+}
+
 html,
 body,
 #app {
   min-height: 100%;
 }
 
+.v-application {
+  font-family: var(--fonte-texto) !important;
+}
+
+.v-application h1,
+.v-application h2,
+.mes-titulo,
+.osesp-titulo,
+.osesp-pagina-titulo {
+  font-family: var(--fonte-titulo) !important;
+}
+
 .cabecalho-marca.v-toolbar {
   background: linear-gradient(90deg, #5b2c91 0%, #c4458c 55%, #e8892d 100%) !important;
+}
+
+.cabecalho-publico .v-toolbar__content {
+  justify-content: center;
+}
+
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: white;
+  text-decoration: none;
+}
+
+.marca-nome {
+  font-family: var(--fonte-marca);
+  font-size: 1.55rem;
+  line-height: 1;
+}
+
+.marca-campus {
+  font-family: var(--fonte-texto);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+}
+
+.link-equipe {
+  position: absolute;
+  right: 18px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.78rem;
+  text-decoration: none;
 }
 
 .logo-cabecalho {
@@ -14,4 +64,539 @@ body,
   border-radius: 10px;
   object-fit: cover;
   background: white;
+}
+
+.pagina-enter-active,
+.pagina-leave-active {
+  transition: opacity 0.28s ease, transform 0.28s ease;
+}
+
+.pagina-enter-from {
+  opacity: 0;
+  transform: translateY(16px) scale(0.985);
+}
+
+.pagina-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.linha-do-tempo {
+  max-width: 980px;
+}
+
+.mes-grupo {
+  margin-bottom: 12px;
+}
+
+.mes-titulo {
+  margin: 28px 0 4px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #6b2d91;
+  color: #6b2d91;
+  font-size: 1.55rem;
+  font-weight: 800;
+}
+
+.osesp-linha {
+  display: grid;
+  grid-template-columns: 72px minmax(140px, 210px) minmax(0, 1fr);
+  gap: 22px;
+  align-items: center;
+  padding: 22px 0;
+  border-bottom: 1px solid #eadfef;
+}
+
+.osesp-dia {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #5b2c91;
+  line-height: 1;
+}
+
+.osesp-dia span {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.osesp-dia strong {
+  margin: 6px 0;
+  font-size: 2.4rem;
+}
+
+.osesp-foto {
+  display: block;
+  height: 150px;
+  background: linear-gradient(145deg, #5b2c91 0%, #c4458c 48%, #e8892d 100%);
+  overflow: hidden;
+  text-decoration: none;
+}
+
+.osesp-foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.osesp-foto span {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  color: white;
+  font-size: 1.3rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+.osesp-titulo {
+  color: #241828;
+  font-size: 1.45rem;
+  font-weight: 800;
+  line-height: 1.2;
+  text-decoration: none;
+}
+
+.osesp-texto p {
+  margin: 10px 0 0;
+  color: #4d4454;
+  line-height: 1.5;
+}
+
+.osesp-dados {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+  margin: 14px 0 0;
+}
+
+.osesp-dados div {
+  min-width: 0;
+}
+
+.osesp-dados dt {
+  color: #8a7b93;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.osesp-dados dd {
+  margin: 0;
+  color: #241828;
+  font-weight: 700;
+}
+
+.osesp-hero {
+  position: relative;
+  width: 100%;
+  height: 34vh;
+  min-height: 200px;
+  background: #1c1224;
+  transition: height 0.35s ease;
+}
+
+.osesp-hero.expandida {
+  height: 78vh;
+}
+
+.expandir-foto {
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  width: 48px;
+  height: 48px;
+  border: 0;
+  border-radius: 50%;
+  background: white;
+  color: #5b2c91;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+}
+
+.osesp-hero img,
+.osesp-hero-vazio {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.osesp-hero-vazio {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  background: linear-gradient(145deg, #5b2c91 0%, #c4458c 48%, #e8892d 100%);
+}
+
+.osesp-hero-vazio h1 {
+  max-width: 12ch;
+  color: white;
+  font-size: clamp(2.8rem, 7vw, 5.5rem);
+  line-height: 0.95;
+  text-align: center;
+}
+
+.osesp-miniaturas {
+  display: flex;
+  gap: 8px;
+  padding: 10px 24px 0;
+}
+
+.osesp-miniaturas button {
+  width: 92px;
+  height: 58px;
+  padding: 0;
+  border: 2px solid transparent;
+  background: none;
+  cursor: pointer;
+}
+
+.osesp-miniaturas button.ativa {
+  border-color: #6b2d91;
+}
+
+.osesp-miniaturas img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.evento-miolo {
+  max-width: 920px;
+  text-align: center;
+}
+
+.divisor {
+  width: min(100%, 180px);
+  height: 3px;
+  margin: 8px auto 28px;
+  border: 0;
+  border-radius: 99px;
+  background: linear-gradient(90deg, #6b2d91, #e8892d);
+}
+
+.osesp-pagina-titulo {
+  margin: 0 0 18px;
+  color: #241828;
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 700;
+  line-height: 1.12;
+}
+
+.osesp-dados-centrais {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 20px;
+  width: 100%;
+  margin: 0 0 28px;
+  text-align: center;
+}
+
+.osesp-dados-centrais dt {
+  color: #8a7b93;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.osesp-dados-centrais dd {
+  margin: 2px 0 0;
+  color: #241828;
+  font-size: clamp(1.15rem, 2.4vw, 1.45rem);
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.osesp-pagina-texto {
+  margin: 0 auto 32px;
+  max-width: 70ch;
+  color: #5c5362;
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+.evento-inscricao {
+  width: 100%;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 28px 22px 18px;
+  text-align: left;
+  background: white;
+  border: 1px solid #f0e4f6;
+  border-radius: 28px;
+  box-shadow: 0 18px 40px rgba(91, 44, 145, 0.08);
+}
+
+.evento-inscricao h2 {
+  margin-bottom: 6px;
+  text-align: center;
+  color: #5b2c91;
+  font-weight: 700;
+}
+
+.btn-participar {
+  animation: pulso 1.8s ease-in-out infinite;
+}
+
+@keyframes pulso {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 8px 0 rgba(107, 45, 145, 0.18);
+  }
+  50% {
+    transform: scale(1.04);
+    box-shadow: 0 8px 22px rgba(232, 137, 45, 0.45);
+  }
+}
+
+.inscricao-apoio {
+  margin: 0 0 18px;
+  text-align: center;
+  color: #6d6274;
+}
+
+@media (max-width: 800px) {
+  .osesp-linha {
+    grid-template-columns: 64px 1fr;
+  }
+
+  .osesp-foto {
+    grid-column: 1 / -1;
+    height: 190px;
+  }
+
+  .osesp-dados-centrais {
+    grid-template-columns: 1fr;
+  }
+}
+
+.linha-evento {
+  width: 100%;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  text-align: left;
+  background: white;
+  border: 0;
+  border-bottom: 1px solid #eadfef;
+  padding: 18px 8px;
+  cursor: pointer;
+  transition: background 0.2s ease, padding-left 0.2s ease;
+}
+
+.linha-evento:hover {
+  background: #fbf6f0;
+  padding-left: 16px;
+}
+
+.linha-data {
+  min-width: 88px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #6b2d91;
+}
+
+.linha-corpo {
+  display: flex;
+  flex-direction: column;
+}
+
+.linha-titulo {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #2b2033;
+}
+
+.linha-meta {
+  color: #6d6274;
+}
+
+.janela-evento {
+  position: relative;
+  min-height: 72vh;
+  padding: 8px 8px 48px;
+}
+
+.janela-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.fechar-janela {
+  width: 52px;
+  height: 52px;
+  border: 0;
+  border-radius: 50%;
+  background: #f3e9f8;
+  color: #5b2c91;
+  cursor: pointer;
+  flex: none;
+}
+
+.janela-quando {
+  margin: 0;
+  font-size: clamp(1.6rem, 3vw, 2.1rem);
+  font-weight: 800;
+  color: #c45b12;
+}
+
+.janela-titulo {
+  max-width: 18ch;
+  margin: 0 0 28px;
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
+  line-height: 1.05;
+  color: #5b2c91;
+}
+
+.janela-fatos {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+@media (min-width: 700px) {
+  .janela-fatos {
+    grid-template-columns: 1.4fr 1fr;
+  }
+}
+
+.janela-fatos span {
+  display: block;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #8a7b93;
+}
+
+.janela-fatos strong {
+  display: block;
+  margin-top: 4px;
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  line-height: 1.15;
+  color: #2b2033;
+}
+
+.janela-descricao {
+  max-width: 68ch;
+  margin: 0;
+  font-size: 1.25rem;
+  line-height: 1.55;
+  color: #3d3344;
+}
+
+.janela-fotos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.janela-fotos img {
+  width: 180px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.janela-enter-active,
+.janela-leave-active,
+.lista-enter-active,
+.lista-leave-active {
+  transition: opacity 0.28s ease, transform 0.28s ease;
+}
+
+.janela-enter-from,
+.lista-enter-from {
+  opacity: 0;
+  transform: translateY(18px);
+}
+
+.janela-leave-to,
+.lista-leave-to {
+  opacity: 0;
+  transform: translateY(-12px);
+}
+
+.cartao-evento {
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.28s ease, box-shadow 0.28s ease;
+}
+
+.cartao-evento:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 40px rgba(91, 44, 145, 0.18) !important;
+}
+
+.capa-evento {
+  position: relative;
+  height: 230px;
+  background: linear-gradient(145deg, #5b2c91 0%, #c4458c 55%, #e8892d 100%);
+  overflow: hidden;
+}
+
+.capa-evento img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.45s ease;
+}
+
+.cartao-evento:hover .capa-evento img {
+  transform: scale(1.06);
+}
+
+.capa-evento .legenda {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 28px 16px 14px;
+  background: linear-gradient(transparent, rgba(40, 10, 50, 0.82));
+  color: white;
+}
+
+.hero-evento {
+  position: relative;
+  min-height: 320px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: linear-gradient(145deg, #5b2c91, #e8892d);
+}
+
+.hero-evento img {
+  width: 100%;
+  height: 420px;
+  object-fit: cover;
+  display: block;
+}
+
+.miniatura-foto {
+  width: 84px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 10px;
+  cursor: pointer;
+  opacity: 0.75;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.miniatura-foto.ativa,
+.miniatura-foto:hover {
+  opacity: 1;
+  transform: translateY(-2px);
 }

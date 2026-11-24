@@ -72,4 +72,10 @@ public class Evento {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private List<Inscricao> inscricoes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "evento", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private List<EventoFoto> fotos = new ArrayList<>();
 }

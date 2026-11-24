@@ -1,6 +1,7 @@
 package br.edu.utfpr.gestoreventosmd.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,4 +22,5 @@ public class EventoResponseDTO {
     private Integer limiteVagas;
     private Long vagasDisponiveis;
     private UUID usuarioId;
+    private List<UUID> fotos;
 }

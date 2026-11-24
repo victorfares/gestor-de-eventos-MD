@@ -7,6 +7,7 @@ import br.edu.utfpr.gestoreventosmd.exception.BusinessException;
 import br.edu.utfpr.gestoreventosmd.exception.ResourceNotFoundException;
 import br.edu.utfpr.gestoreventosmd.model.Evento;
 import br.edu.utfpr.gestoreventosmd.model.Usuario;
+import br.edu.utfpr.gestoreventosmd.repository.EventoFotoRepository;
 import br.edu.utfpr.gestoreventosmd.repository.EventoRepository;
 import br.edu.utfpr.gestoreventosmd.repository.InscricaoRepository;
 import br.edu.utfpr.gestoreventosmd.repository.UsuarioRepository;
@@ -24,6 +25,7 @@ public class EventoService {
     private final EventoRepository eventoRepository;
     private final UsuarioRepository usuarioRepository;
     private final InscricaoRepository inscricaoRepository;
+    private final EventoFotoRepository eventoFotoRepository;
 
     @Transactional(readOnly = true)
     public List<EventoResponseDTO> listar(PeriodoEvento periodo) {
@@ -114,6 +116,7 @@ public class EventoService {
                 .vagasDisponiveis(Math.max(0, evento.getLimiteVagas()
                         - inscricaoRepository.countByEventoId(evento.getId())))
                 .usuarioId(evento.getCriador() != null ? evento.getCriador().getId() : null)
+                .fotos(eventoFotoRepository.findIdsByEventoId(evento.getId()))
                 .build();
     }
 }

@@ -5,6 +5,8 @@ import br.edu.utfpr.gestoreventosmd.dto.EventoRequestDTO;
 import br.edu.utfpr.gestoreventosmd.dto.EventoResponseDTO;
 import br.edu.utfpr.gestoreventosmd.dto.InscricaoResponseDTO;
 import br.edu.utfpr.gestoreventosmd.dto.PeriodoEvento;
+import br.edu.utfpr.gestoreventosmd.model.EventoFoto;
+import br.edu.utfpr.gestoreventosmd.service.EventoFotoService;
 import br.edu.utfpr.gestoreventosmd.service.EventoService;
 import br.edu.utfpr.gestoreventosmd.service.InscricaoService;
 import jakarta.validation.Valid;
@@ -12,6 +14,7 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.UUID;
+import org.springframework.web.multipart.MultipartFile;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
@@ -36,6 +39,7 @@ public class EventoController {
 
     private final EventoService eventoService;
     private final InscricaoService inscricaoService;
+    private final EventoFotoService eventoFotoService;
 
     @GetMapping
     public ResponseEntity<List<EventoResponseDTO>> listar(
@@ -63,6 +67,28 @@ public class EventoController {
                         .build()
                         .toString())
                 .body(arquivo.conteudo());
+    }
+
+    @PostMapping(value = "/{id}/fotos", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<EventoResponseDTO> adicionarFotos(
+            @PathVariable UUID id,
+            @RequestParam("fotos") List<MultipartFile> fotos) {
+        return ResponseEntity.ok(eventoFotoService.adicionar(id, fotos));
+    }
+
+    @GetMapping("/{id}/fotos/{fotoId}")
+    public ResponseEntity<byte[]> buscarFoto(@PathVariable UUID id, @PathVariable UUID fotoId) {
+        EventoFoto foto = eventoFotoService.buscar(id, fotoId);
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(foto.getTipoConteudo()))
+                .header(HttpHeaders.CACHE_CONTROL, "public, max-age=86400")
+                .body(foto.getConteudo());
+    }
+
+    @DeleteMapping("/{id}/fotos/{fotoId}")
+    public ResponseEntity<Void> excluirFoto(@PathVariable UUID id, @PathVariable UUID fotoId) {
+        eventoFotoService.excluir(id, fotoId);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping
