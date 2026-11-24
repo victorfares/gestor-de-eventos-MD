@@ -36,6 +36,13 @@ public class ResourceExceptionHandler {
         return montarErro(HttpStatus.CONFLICT, "Regra de negócio violada", e.getMessage(), request);
     }
 
+    @ExceptionHandler(CadastroPendenteException.class)
+    public ResponseEntity<StandardError> cadastroPendente(
+            CadastroPendenteException e,
+            HttpServletRequest request) {
+        return montarErro(HttpStatus.FORBIDDEN, "Cadastro pendente", e.getMessage(), request);
+    }
+
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<StandardError> badCredentials(
             BadCredentialsException e,

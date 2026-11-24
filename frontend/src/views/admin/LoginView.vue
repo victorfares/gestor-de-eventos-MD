@@ -17,6 +17,10 @@
           />
           <v-btn type="submit" color="primary" :loading="enviando" block>Entrar</v-btn>
         </v-form>
+        <div class="text-center mt-4 text-body-2">
+          Ainda não tem acesso?
+          <router-link :to="{ name: 'cadastro' }">Solicitar cadastro</router-link>
+        </div>
       </v-card-text>
     </v-card>
   </v-container>

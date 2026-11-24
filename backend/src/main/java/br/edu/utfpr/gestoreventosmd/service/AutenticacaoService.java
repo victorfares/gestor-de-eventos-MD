@@ -3,6 +3,8 @@ package br.edu.utfpr.gestoreventosmd.service;
 import br.edu.utfpr.gestoreventosmd.dto.LoginRequestDTO;
 import br.edu.utfpr.gestoreventosmd.dto.LoginResponseDTO;
 import br.edu.utfpr.gestoreventosmd.dto.UsuarioResponseDTO;
+import br.edu.utfpr.gestoreventosmd.exception.CadastroPendenteException;
+import br.edu.utfpr.gestoreventosmd.model.StatusUsuario;
 import br.edu.utfpr.gestoreventosmd.model.Usuario;
 import br.edu.utfpr.gestoreventosmd.repository.UsuarioRepository;
 import java.time.Duration;
@@ -46,6 +48,12 @@ public class AutenticacaoService {
 
         Usuario usuario = usuarioRepository.findByEmailIgnoreCase(dto.getEmail())
                 .orElseThrow(() -> new BadCredentialsException("Credenciais inválidas"));
+
+        // Conferido só depois da senha, para não revelar quem pediu cadastro.
+        if (usuario.getStatus() != StatusUsuario.APROVADO) {
+            throw new CadastroPendenteException(
+                    "Seu cadastro ainda aguarda aprovação de um membro da equipe. Tente novamente mais tarde.");
+        }
 
         Instant agora = Instant.now();
         Instant expiraEm = agora.plus(validadeToken);

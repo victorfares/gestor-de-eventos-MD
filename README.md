@@ -73,7 +73,7 @@ docker run -d --name gestor_eventos_db -e POSTGRES_USER=postgres -e POSTGRES_PAS
 ```
 
 3. Confirme com `docker ps`. O contêiner `gestor_eventos_db` deve aparecer com a porta `5432`.
-4. Não crie tabelas à mão. Ao iniciar a API, o Hibernate cria `eventos`, `inscricoes` e `usuarios`.
+4. Não crie tabelas à mão. Ao iniciar a API, o Hibernate cria `eventos`, `evento_fotos`, `inscricoes` e `usuarios`.
 5. Na primeira subida, a API também cria o administrador padrão, se esse e-mail ainda não existir.
 
 Para parar o banco: `docker stop gestor_eventos_db`. Para iniciar de novo: `docker start gestor_eventos_db`.
@@ -150,6 +150,8 @@ Publicar a agenda de oficinas, minicursos e rodas de conversa do Meninas Digitai
 - Cadastro, edição e exclusão de eventos. O criador é o membro autenticado.
 - Lista de inscritas e exportação em CSV para a chamada.
 - Cadastro de outros membros da equipe.
+- Autocadastro de novos membros em **Solicitar cadastro**. O acesso só é liberado depois que um membro aprova o pedido na tela **Membros**.
+- Até 6 fotos por evento, com no máximo 4 MB cada. Uma foto maior é recusada com uma mensagem que mostra o nome e o tamanho do arquivo.
 - Respostas de erro padronizadas: 400 para dados inválidos, 401 para falta de login, 404 para registro inexistente e 409 para regra de negócio.
 
 ### Ordem do teste
