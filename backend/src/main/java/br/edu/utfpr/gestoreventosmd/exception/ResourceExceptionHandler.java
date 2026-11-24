@@ -1,5 +1,6 @@
 package br.edu.utfpr.gestoreventosmd.exception;
 
+import br.edu.utfpr.gestoreventosmd.service.EventoFotoService;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.Instant;
 import java.util.Arrays;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 @RestControllerAdvice
 public class ResourceExceptionHandler {
@@ -87,6 +89,19 @@ public class ResourceExceptionHandler {
                     .collect(Collectors.joining(", "));
         }
         return montarErro(HttpStatus.BAD_REQUEST, "Parâmetro inválido", message, request);
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<StandardError> uploadMuitoGrande(
+            MaxUploadSizeExceededException e,
+            HttpServletRequest request) {
+        return montarErro(
+                HttpStatus.CONTENT_TOO_LARGE,
+                "Arquivo muito grande",
+                "As fotos enviadas passam do tamanho permitido. Cada foto pode ter no máximo "
+                        + EventoFotoService.TAMANHO_MAXIMO_MB + " MB, e o evento aceita até "
+                        + EventoFotoService.LIMITE_FOTOS + " fotos.",
+                request);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

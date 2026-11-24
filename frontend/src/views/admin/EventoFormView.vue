@@ -27,10 +27,14 @@
             accept="image/png,image/jpeg,image/webp,image/gif"
             prepend-icon="mdi-camera"
             multiple
-            show-size
-            hint="Até 6 fotos, JPG, PNG, WEBP ou GIF, no máximo 4 MB cada."
+            :error-messages="errosFotos"
+            :hint="`Até ${LIMITE_FOTOS} fotos, JPG, PNG, WEBP ou GIF, no máximo ${TAMANHO_MAXIMO_MB} MB cada.`"
             persistent-hint
-          />
+          >
+            <template #selection="{ fileNames }">
+              {{ listaNovasFotos.map((f, i) => `${fileNames[i]} (${formatarTamanho(f.size)})`).join(', ') }}
+            </template>
+          </v-file-input>
           <div v-if="fotosAtuais.length" class="d-flex flex-wrap ga-3 my-4">
             <div v-for="foto in fotosAtuais" :key="foto" class="text-center">
               <img :src="urlFoto(route.params.id, foto)" alt="" class="miniatura-foto ativa" />
@@ -48,7 +52,7 @@
 import { computed, onMounted, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import http, { mensagemErro } from '@/api/http'
-import { enviarFotos, urlFoto } from '@/api/fotos'
+import { LIMITE_FOTOS, TAMANHO_MAXIMO_MB, enviarFotos, formatarTamanho, urlFoto, validarFotos } from '@/api/fotos'
 import { paraApiDataHora, paraCampoDataHora } from '@/formatacao'
 
 const route = useRoute()
@@ -58,6 +62,10 @@ const enviando = ref(false)
 const erro = ref('')
 const novasFotos = ref([])
 const fotosAtuais = ref([])
+const listaNovasFotos = computed(() =>
+  Array.isArray(novasFotos.value) ? novasFotos.value : [novasFotos.value].filter(Boolean),
+)
+const errosFotos = computed(() => validarFotos(listaNovasFotos.value, fotosAtuais.value.length))
 const form = reactive({
   titulo: '',
   descricao: '',
@@ -85,6 +93,10 @@ async function carregar() {
 
 async function salvar() {
   erro.value = ''
+  if (errosFotos.value.length) {
+    erro.value = 'Corrija as fotos antes de salvar: ' + errosFotos.value.join(' ')
+    return
+  }
   enviando.value = true
   const corpo = {
     titulo: form.titulo,
@@ -93,21 +105,32 @@ async function salvar() {
     local: form.local,
     limiteVagas: form.limiteVagas,
   }
+  let eventoId = route.params.id
   try {
-    let eventoId = route.params.id
     if (editando.value) {
       await http.put(`/api/eventos/${eventoId}`, corpo)
     } else {
       const { data } = await http.post('/api/eventos', corpo)
       eventoId = data.id
     }
-    const lista = Array.isArray(novasFotos.value) ? novasFotos.value : [novasFotos.value].filter(Boolean)
-    if (lista.length) {
-      await enviarFotos(http, eventoId, lista)
+  } catch (e) {
+    erro.value = mensagemErro(e, 'Não foi possível salvar o evento.')
+    enviando.value = false
+    return
+  }
+  try {
+    if (listaNovasFotos.value.length) {
+      await enviarFotos(http, eventoId, listaNovasFotos.value)
     }
     router.push({ name: 'admin-eventos' })
   } catch (e) {
-    erro.value = mensagemErro(e, 'Não foi possível salvar o evento.')
+    const motivo = mensagemErro(e, 'Não foi possível enviar as fotos.')
+    erro.value = `O evento foi salvo, mas as fotos não foram enviadas. ${motivo}`
+    if (!editando.value) {
+      // Evita criar o evento de novo ao tentar salvar outra vez.
+      await router.replace({ name: 'admin-evento-editar', params: { id: eventoId } })
+      await carregar()
+    }
   } finally {
     enviando.value = false
   }
